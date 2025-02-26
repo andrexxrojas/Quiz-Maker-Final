@@ -10,6 +10,8 @@ dotenv.config();
 import User from "./src/models/User.js"
 import Quiz from "./src/models/Quiz.js"
 
+import { generateJoinCode } from "./src/services/quizService.js";
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 const JWT_SECRET = process.env.JWT_SECRET;

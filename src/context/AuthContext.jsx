@@ -58,34 +58,31 @@ export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
   const API_URL = 'http://localhost:5000';
 
-  // Load user data if token exists
   useEffect(() => {
     const loadUser = async () => {
-      if (state.token) {
-        try {
-          // Set the token in headers
-          axios.defaults.headers.common['x-auth-token'] = state.token;
-          
-          const res = await axios.get(`${API_URL}/api/auth/user`);
-          console.log("User data loaded:", res.data);
-          dispatch({
-            type: 'USER_LOADED',
-            payload: res.data
-          });
-        } catch (err) {
-          console.error("Auth error:", err);
-          localStorage.removeItem('token');
-          delete axios.defaults.headers.common['x-auth-token'];
-          dispatch({ type: 'AUTH_ERROR' });
+        if (state.token) {
+            try {
+                // Set the token in headers
+                axios.defaults.headers.common['x-auth-token'] = state.token;
+                
+                const res = await axios.get(`${API_URL}/api/auth/user`);
+                dispatch({
+                    type: 'USER_LOADED',
+                    payload: res.data
+                });
+            } catch (err) {
+                localStorage.removeItem('token');
+                delete axios.defaults.headers.common['x-auth-token'];
+                dispatch({ type: 'AUTH_ERROR' });
+            }
+        } else {
+            dispatch({ type: 'AUTH_ERROR' });
         }
-      } else {
-        dispatch({ type: 'AUTH_ERROR' });
-      }
     };
     loadUser();
-  }, [state.token]);  // Include state.token to run when token changes
+}, [state.token]);
 
-  // Register user
+
   const register = async (userData) => {
     try {
       const res = await axios.post(`${API_URL}/api/auth/register`, userData);
@@ -101,7 +98,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Login user
   const login = async (userData) => {
     try {
       const res = await axios.post(`${API_URL}/api/auth/login`, userData);
@@ -117,12 +113,10 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Logout user
   const logout = () => {
     dispatch({ type: 'LOGOUT' });
   };
 
-  // Clear errors
   const clearError = () => {
     dispatch({ type: 'CLEAR_ERROR' });
   };

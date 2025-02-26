@@ -8,19 +8,22 @@ import "../styles/quizStyle.css";
 function QuizManual() {
     const [quizName, setQuizName] = useState("");
     const [questions, setQuestions] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    const { isAuthenticated, loading: authLoading, token } = useContext(AuthContext);
     const navigate = useNavigate();
 
-    const { isAuthenticated, loading: authLoading } = useContext(AuthContext);
-
-    // Only redirect if the authentication is finished
     useEffect(() => {
-        if (authLoading) return; // Don't do anything if authentication is loading
+        if (authLoading) return; 
         if (!isAuthenticated) {
-            navigate("/"); // Redirect to home page if not authenticated
+            navigate("/"); 
+            return;
         }
-    }, [isAuthenticated, authLoading, navigate]);
+
+        setLoading(false)
+        navigate("/quiz-manual");
+    }, [loading, isAuthenticated, navigate]);
 
     const addQuestion = () => {
         setQuestions(prev => [
@@ -47,6 +50,7 @@ function QuizManual() {
     };
 
     const handleSubmit = async () => {
+        setError(null); // Clear any existing error before submitting
         if (!quizName.trim()) return setError("Please enter a quiz name");
         if (questions.length === 0) return setError("Please add at least one question");
 
@@ -65,13 +69,14 @@ function QuizManual() {
                 }))
             }));
             
+            setLoading(true); // Set loading state to true while submitting the quiz
             await createQuiz({ title: quizName, questions: formattedQuestions });
             navigate('/userHome');
         } catch (err) {
             setError("Failed to create quiz");
-            console.error(err);
+            console.error("Error creating quiz:", err);
         } finally {
-            setLoading(false);
+            setLoading(false); // Reset loading state after operation
         }
     };
 

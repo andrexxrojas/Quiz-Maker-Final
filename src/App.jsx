@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 // Import components
 import Nav from "./components/Nav";
 import LoginRegisterModal from "./components/LoginRegisterModal";
-import ProtectedRoute from "./components/ProtectedRoute"; // Add this import
+import ProtectedRoute from "./components/ProtectedRoute"; 
 import { AuthProvider } from "./context/AuthContext";
 
 // Pages
@@ -38,7 +38,7 @@ function App() {
           }
         />
         <Route
-          path="/quizManual"
+          path="/quiz-manual"
           element={
             <ProtectedRoute>
               <QuizManual />
@@ -46,7 +46,7 @@ function App() {
           }
         />
         <Route
-          path="/quiznew"
+          path="/quiz-generation"
           element={
             <ProtectedRoute>
               <CreateQuizAI />

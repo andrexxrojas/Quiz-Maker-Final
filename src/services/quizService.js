@@ -14,13 +14,15 @@ const getAuthHeaders = () => {
 // Create a new quiz
 export const createQuiz = async (quizData) => {
   try {
-    const res = await axios.post(`${API_URL}/api/quizzes`, quizData, getAuthHeaders());
+    const res = await axios.post(`${API_URL}/api/quizzes`, quizData, getAuthHeaders()); // Use POST for creating a quiz
     return res.data;
   } catch (error) {
     console.error("Error creating quiz:", error);
-    throw new Error("Failed to create quiz"); // Throw an error to be caught in the component
+    throw new Error("Failed to create quiz");
   }
 };
+
+
 
 // Get all quizzes for the current user
 export const getUserQuizzes = async () => {
@@ -65,3 +67,15 @@ export const deleteQuiz = async (id) => {
     throw new Error("Failed to delete quiz");
   }
 };
+
+// Generate a unique join code
+// Function to generate a unique join code
+export const generateJoinCode = () => {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let code = '';
+  for (let i = 0; i < 6; i++) {
+      code += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return code;
+};
+

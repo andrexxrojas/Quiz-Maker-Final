@@ -17,9 +17,10 @@ function UserHome() {
     useEffect(() => {
         if (authLoading) return; // Don't fetch if auth is still loading
         if (!isAuthenticated) {
-            navigate("/"); // Redirect if not authenticated
+            navigate("/"); // Redirect to home page if not authenticated
+            return; // Stop further execution after navigation
         }
-
+    
         const fetchQuizzes = async () => {
             try {
                 const data = await getUserQuizzes();
@@ -31,9 +32,10 @@ function UserHome() {
                 setLoading(false);
             }
         };
-
+    
         if (isAuthenticated) fetchQuizzes(); // Only fetch if authenticated
-    }, [isAuthenticated, authLoading, navigate]);
+    }, [authLoading, isAuthenticated, navigate]);
+    
 
     const handleJoin = async () => {
         const trimmedCode = code.trim().toUpperCase();
@@ -75,13 +77,21 @@ function UserHome() {
                             <h3>Make a Quiz</h3>
 
                             <div className="choice-container">
-                                <button type="button" onClick={() => { navigate("/quizManual"); }}>
-                                    Manual
-                                </button>
-                                <span>/</span>
-                                <button type="button" onClick={() => { navigate("/quiznew"); }}>
-                                    Generate With AI
-                                </button>
+                            <button type="button" onClick={() => { 
+                                console.log("Navigating to quizManual");
+                                navigate("/quiz-manual"); 
+                            }}>
+                                Manual
+                            </button>
+
+                            <span>/</span>
+
+                            <button type="button" onClick={() => { 
+                                console.log("Navigating to quiznew");
+                                navigate("/quiz-generation"); 
+                            }}>
+                                Generate With AI
+                            </button>
                             </div>
                         </div>
                     </div>
