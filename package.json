@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@react-three/fiber": "^9.0.4",
+    "nodemon": "^3.1.9",
+    "quiz-maker-final": "file:",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.2.0",
