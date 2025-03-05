@@ -1,11 +1,4 @@
 import { useState } from "react";
-import dotenv from "dotenv";
-import OpenAI from "openai/index.mjs";
-
-const openai = new OpenAI({
-    apiKey: import.meta.env.VITE_OPENAI_API_KEY,
-    dangerouslyAllowBrowser: true
-})
 
 function QuizAI() {
     const [quizName, setQuizName] = useState("");
