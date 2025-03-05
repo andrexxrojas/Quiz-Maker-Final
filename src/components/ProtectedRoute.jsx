@@ -9,8 +9,12 @@ const ProtectedRoute = ({ children }) => {
     if (loading) return; // Waiting for loading state
   }, [loading]);
 
+  if (loading) {
+    return <div>Loading...</div>; // Optional loading state
+  }
+
   if (!isAuthenticated) {
-    return <Navigate to="/" />;
+    return <Navigate to="/" replace />; // Redirect to home if not authenticated
   }
 
   return children;

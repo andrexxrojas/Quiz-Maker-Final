@@ -12,7 +12,8 @@ import { AuthProvider } from "./context/AuthContext";
 import Home from "./pages/Home";
 import UserHome from "./pages/UserHome";
 import QuizManual from "./pages/QuizManual";
-import CreateQuizAI from "./pages/CreateQuizAI";
+import QuizAI from "./pages/QuizAI"
+import Quiz from "./pages/Quiz";
 
 function App() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -49,9 +50,21 @@ function App() {
           path="/quiz-generation"
           element={
             <ProtectedRoute>
-              <CreateQuizAI />
+              <QuizAI />
             </ProtectedRoute>
           }
+        />
+        <Route
+          path="/quiz/:id"
+          element={
+            <ProtectedRoute>
+              <Quiz/>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/quiz/join/:id"
+          element={<Quiz />} // Public route, no authentication
         />
       </Routes>
 

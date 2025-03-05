@@ -41,15 +41,23 @@ export const getQuiz = async (id) => {
     const res = await axios.get(`${API_URL}/api/quizzes/${id}`, getAuthHeaders());
     return res.data;
   } catch (error) {
-    console.error("Error fetching quiz:", error);
-    throw new Error("Failed to fetch quiz");
+    console.error("Detailed error in getQuiz:", error);
+    
+    // If there's a response from the server, throw its message
+    if (error.response) {
+      console.error("Server response error:", error.response.data);
+      throw error.response.data;
+    }
+    
+    // If no server response, throw a generic error
+    throw new Error("Failed to fetch quiz. Please try again.");
   }
 };
 
 // Join a quiz by code
 export const joinQuiz = async (code) => {
   try {
-    const res = await axios.get(`${API_URL}/api/quizzes/join/${code}`, getAuthHeaders());
+    const res = await axios.get(`${API_URL}/api/quizzes/join/${code}`);
     return res.data;
   } catch (error) {
     console.error("Error joining quiz:", error);

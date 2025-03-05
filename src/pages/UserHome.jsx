@@ -38,20 +38,26 @@ function UserHome() {
     
 
     const handleJoin = async () => {
+        setError(null);
         const trimmedCode = code.trim().toUpperCase();
+    
         if (trimmedCode.length !== 6 || !/^[A-Z0-9]{6}$/.test(trimmedCode)) {
             setError("Invalid join code format");
             return;
         }
-
+    
         try {
-            const quiz = await joinQuiz(trimmedCode);
-            navigate(`/quiz/${quiz._id}`);
+            console.log("Joining quiz with code:", trimmedCode);
+            const quiz = await joinQuiz(trimmedCode); // Use joinCode, not ID
+            if (!quiz || !quiz._id) {
+                throw new Error("Quiz not found");
+            }
+            navigate(`/quiz/join/${quiz._id}`);
         } catch (err) {
-            setError("Invalid join code");
-            console.error(err);
+            setError(err.message);
         }
-    };
+    };    
+    
 
     return (
         <div className="user-home-container">
@@ -81,7 +87,7 @@ function UserHome() {
                                 console.log("Navigating to quizManual");
                                 navigate("/quiz-manual"); 
                             }}>
-                                Manual
+                                Create Quiz Manually
                             </button>
 
                             <span>/</span>
@@ -115,7 +121,10 @@ function UserHome() {
                                         <Link to={`/quiz/${quiz._id}`}>
                                             <button className="view-btn">View</button>
                                         </Link>
+                                        <button className="edit-btn" onClick={() => navigate(`/quiz-edit/${quiz._id}`)}>Edit</button>
+                                        <button className="delete-btn" onClick={() => handleDelete(quiz._id)}>Delete</button>
                                     </div>
+
                                 </div>
                             ))}
                         </div>

@@ -172,28 +172,22 @@ app.get('/api/quizzes/join/:code', async (req, res) => {
 
 // Get a specific quiz
 app.get('/api/quizzes/:id', authMiddleware, async (req, res) => {
-    try {
-      const quiz = await Quiz.findById(req.params.id);
-      
-      if (!quiz) {
-        return res.status(404).json({ message: 'Quiz not found' });
-      }
-      
-      // Check if the quiz belongs to the user
-      if (quiz.user.toString() !== req.user.id) {
-        return res.status(401).json({ message: 'Not authorized' });
-      }
-      
-      res.json(quiz);
-    } catch (err) {
-      console.error(err.message);
-      
-      if (err.kind === 'ObjectId') {
-        return res.status(404).json({ message: 'Quiz not found' });
-      }
-      
-      res.status(500).send('Server error');
+  try {
+    const quiz = await Quiz.findById(req.params.id);
+    
+    if (!quiz) {
+      return res.status(404).json({ message: 'Quiz not found' });
     }
+    
+    // This check ensures the quiz belongs to the authenticated user
+    if (quiz.user.toString() !== req.user.id.toString()) {
+      return res.status(401).json({ message: 'Not authorized' });
+    }
+    
+    res.json(quiz);
+  } catch (err) {
+    // Error handling
+  }
 });
 
 // Delete a quiz
