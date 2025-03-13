@@ -56,7 +56,8 @@ function authReducer(state, action) {
 
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
-  const API_URL = 'http://localhost:5000';
+  // const API_URL = 'http://localhost:5000';
+  const API_URL = 'https://quiz-maker-final.vercel.app';
 
   useEffect(() => {
     const loadUser = async () => {
