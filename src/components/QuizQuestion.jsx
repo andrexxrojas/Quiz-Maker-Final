@@ -18,9 +18,11 @@ function QuizQuestion({ question, onUpdate, onRemove }) {
     };
 
     const toggleCorrectAnswer = (index) => {
-        const updatedOptions = options.map((opt, i) => 
-            i === index ? { ...opt, isCorrect: !opt.isCorrect } : opt
-        );
+        const updatedOptions = options.map((opt, i) => ({
+            ...opt,
+            isCorrect: i === index ? true : false, // Set only the clicked option as correct
+        }));
+        
         setOptions(updatedOptions);
         onUpdate({ ...question, options: updatedOptions });
     };
@@ -43,7 +45,7 @@ function QuizQuestion({ question, onUpdate, onRemove }) {
     };
 
     return(
-        <div className="quiz-question-container">
+        <div className="quiz-question-container manual">
             <input 
                 className="question-input" 
                 type="text" 
@@ -53,15 +55,6 @@ function QuizQuestion({ question, onUpdate, onRemove }) {
             />
 
             <div className="option-container">
-
-                {/* <div className="option">
-                    <input type="text" placeholder="Type answer here"/>
-                    <div className="option-choices">
-                        <button><i class="fa-solid fa-trash-can"></i></button>
-                        <button><i class="fa-solid fa-check"></i></button>
-                    </div>
-                </div> */}
-
                 {options.map((option, index) => (
                     <div className="option" key={option.id}>
                         <input
@@ -71,7 +64,7 @@ function QuizQuestion({ question, onUpdate, onRemove }) {
                             onChange={(e) => handleOptionChange(index, e.target.value)}
                         />
                         <div className="option-choices">
-                            <button onClick={() => removeOption(index)}>
+                            <button className="delete-btn" onClick={() => removeOption(index)}>
                                 <i className="fa-solid fa-trash-can"></i>
                             </button>
                             <button 
@@ -83,7 +76,7 @@ function QuizQuestion({ question, onUpdate, onRemove }) {
                         </div>
 
                         {options.length < 4 && (
-                            <button onClick={addOption}>Add Option</button>
+                            <button className="add-option-btn" onClick={addOption}>+</button>
                         )}
                     </div>
                 ))}

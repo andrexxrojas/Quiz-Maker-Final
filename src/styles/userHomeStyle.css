@@ -1,6 +1,5 @@
 /* User Home Container */
 .user-home-container {
-    border: 1px solid red;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -28,7 +27,7 @@
 
 /* Join Box */
 .join-container { 
-    background-color: #E0E4EB;
+    background-color: #8942FE;
     border-radius: 6px;
     min-height: 200px;
     width: 40%;
@@ -46,7 +45,7 @@
     padding: 10px;
     width: 100%;
     max-width: 400px;
-    background-color: #F0F1F5;
+    background-color: #D4CDFF; 
     border-radius: 8px;
     margin: 0 30px;
 }
@@ -69,22 +68,24 @@
     border-radius: 8px;
     border: none;
     outline: none;
-    background-color: #121213;
+    background-color: #212529;
     color: #fff;
     user-select: none;
     cursor: pointer;
+    transition: 0.3s ease;
 }
 /* Join Box */
 
 /* Generate Box */
 .generate-container {
-    background-color: #E0E4EB;
+    background-color: #FED728;
     min-height: 200px;
     width: 60%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     border-radius: 6px;
+    color: #212529;
 }
 
 .generate-container .generate-box {
@@ -108,19 +109,21 @@
 .generate-container .generate-box .choice-container span {
     font-family: "Satoshi Bold", Arial, Helvetica, sans-serif;
     font-size: 20px;
+    color: #FFEBA2;
 }
 
 .generate-container .generate-box .choice-container button {
-    font-family: "Satoshi Bold", Arial, Helvetica, sans-serif;
+    font-family: "Satoshi Medium", Arial, Helvetica, sans-serif;
     font-size: clamp(12px, 1.2vw, 14px);
-    background-color: #121213;
+    background-color: #212529;
     color: #fff;
-    padding: 6px 8px;
+    padding: 8px 12px;
     border-radius: 8px;
     border: none;
     outline: none;
     user-select: none;
     cursor: pointer;
+    transition: 0.3s ease;
 }
 /* Generate Box */
 
@@ -128,8 +131,137 @@
 .bottom-container h3{
     font-family: "Satoshi Bold", Arial, Helvetica, sans-serif;
     font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.bottom-container .lil-msg{
+    font-family: "Satoshi Regular", Arial, Helvetica, sans-serif;
+    font-size: 14px;
+}
+
+.bottom-container .quiz-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.bottom-container .quiz-list .quiz-item {
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border-radius: 6px;
+    background-color: #E6E8EC;
+}
+
+.bottom-container .quiz-list .quiz-item .quiz-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.bottom-container .quiz-list .quiz-item h4 {
+    font-family: "Satoshi Medium", Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.bottom-container .quiz-list .quiz-item p {
+    font-family: "Satoshi Medium", Arial, Helvetica, sans-serif;
+    font-size: 14px;
+}
+
+.bottom-container .quiz-list .quiz-item .quiz-info .join-code strong {
+    user-select: all;
+}
+
+.bottom-container .quiz-list .quiz-item .num-questions {
+    font-family: "Satoshi Medium", Arial, Helvetica, sans-serif;
+    font-size: 14px;
+}
+
+.bottom-container .quiz-list .quiz-item .quiz-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 5px;
+    margin-left: 15px;
+}
+
+.bottom-container .quiz-list .quiz-item .quiz-actions button {
+    font-family: "Satoshi Medium", Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    aspect-ratio: 1;
+    height: 100%;
+    background-color: #212529;
+    color: #fff;
+    border-radius: 4px;
+    user-select: none;
+    cursor: pointer;
+    outline: none;
+    border: none;
 }
 /* Bottom Container */
+
+/* Scores Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    text-align: center;
+  }
+
+  .modal-overlay .modal-content h2 {
+    font-family: "Satoshi Bold", Arial, Helvetica, sans-serif;
+    font-size: 20px;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+  }
+  
+  th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+  }
+  
+  th {
+    font-family: "Satoshi Medium", Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    background: #f4f4f4;
+  }
+
+  td {
+    font-family: "Satoshi Regular", Arial, Helvetica, sans-serif;
+    font-size: 14px;
+  }
+  
+  .close-btn {
+    background: #ff4b4b;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    float: right;
+  }
+/* Scores Modal */
 
 @media screen and (max-width: 1300px) {
     .join-container { 
@@ -152,6 +284,26 @@
 
     .generate-container {
         width: 100%;
+    }
+
+    .bottom-container .quiz-list .quiz-item {
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .bottom-container .quiz-list .quiz-item .quiz-actions button{
+        aspect-ratio: unset;
+        height: unset;
+        padding: 8px 12px;
+    }
+
+    .bottom-container .quiz-list .quiz-item .quiz-actions {
+        width: 100%;
+        margin-left: unset;
+        margin-top: 10px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
     }
 }
 

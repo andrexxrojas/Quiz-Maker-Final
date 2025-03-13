@@ -1,7 +1,7 @@
 import { useState } from "react";
+import { generateQuizAI } from "../services/quizService";
 
-function QuizAI() {
-    const [quizName, setQuizName] = useState("");
+function CreateQuizAI({ setGenerated, setGeneratedQuiz }) {
     const [formData, setFormData] = useState({
         topic: "",
         subTopic: "",
@@ -10,57 +10,42 @@ function QuizAI() {
         questionStyle: "Direct",
         difficulty: "Easy",
         numQuestions: 5
-    })
+    });
 
-    const [generatedQuiz, setGeneratedQuiz] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [quizGenerated, setQuizGenerated] = useState(false);
 
     const handleSelection = (field, value) => {
         setFormData({ ...formData, [field]: value });
     };
 
     const handleSubmit = async () => {
-        // Check for missing fields
-        const missingFields = Object.entries(formData)
-            .filter(([key, value]) => value === "" || value === null)
-            .map(([key]) => key);
-    
-        if (missingFields.length > 0) {
-            alert(`Please fill out the following fields: ${missingFields.join(", ")}`);
-            return;
-        }
-
-        const prompt = `
-        Generate ${formData.numQuestions} quiz questions on the topic of ${formData.topic} (sub-topic: ${formData.subTopic}), 
-        suitable for grade ${formData.grade}. The questions should be of ${formData.difficulty} difficulty and in ${formData.questionStyle} style. 
-        The question type should be ${formData.questionType}. Provide the questions and four answer choices, marking the correct answer. 
-        `;
-
         setLoading(true);
-        
+
+        const prompt = `Generate a ${formData.difficulty.toLowerCase()}-level quiz with ${formData.numQuestions} ${formData.questionType.toLowerCase()} questions. 
+        The quiz should be about "${formData.topic}", specifically focusing on "${formData.subTopic}". 
+        The questions should follow a "${formData.questionStyle.toLowerCase()}" style and be suitable for a grade ${formData.grade} student. 
+        Each question should have four answer choices, with one correct answer clearly indicated.`;
+
+                
         try {
-            const response = await openai.completions.create({
-                model: "gpt-3.5-turbo",
-                messages: [{ role: "system", content: "You are an AI that generates educational quizzes in JSON format." },
-                           { role: "user", content: prompt }],
-                max_tokens: 500,
-                temperature: 0.7,
-                response_format: "json"
-            });
-
-            setGeneratedQuiz(response.choices[0].message.content);
-
-            setGenerated(true);
-        } catch (error) {
-            console.error("Error generating quiz:", error);
-            alert("Failed to generate quiz. Please try again.");
-        } finally {
-            setLoading(false);
-        }
-    };
+            const data = await generateQuizAI(prompt); // Assuming this returns a quiz array
     
+            if (data && Array.isArray(data.questions)) {
+                console.log(data);
+                setGeneratedQuiz(data);  // Pass the quiz to QuizAI
+                setGenerated(true);  // Indicate that the quiz was successfully generated
+                setQuizGenerated(true); // Disable further input
+            }
+            
+        } catch (err) {
+            console.error("Error generating quiz:", err);
+        }
 
-    return(
+        setLoading(false);
+    };
+
+    return (
         <div className="quiz-container ai">
             <div className="additional-container">
                 <div className="quiz-container-box">
@@ -68,32 +53,37 @@ function QuizAI() {
 
                     <div className="quiz-generation-details">
                         <div className="single-div">
-                            <label htmlFor="">Quiz Topic</label>
-                            <input 
-                                type="text" 
+                            <label>Quiz Topic</label>
+                            <input
+                                type="text"
                                 placeholder="Enter quiz topic"
                                 value={formData.topic}
                                 onChange={(e) => handleSelection("topic", e.target.value)}
+                                disabled={quizGenerated}
                             />
                         </div>
 
                         <div className="single-div">
-                            <label htmlFor="">Sub-topic</label>
-                            <input 
-                                type="text" 
+                            <label>Sub-topic</label>
+                            <input
+                                type="text"
                                 placeholder="Enter sub-topic"
                                 value={formData.subTopic}
                                 onChange={(e) => handleSelection("subTopic", e.target.value)}
+                                disabled={quizGenerated}
                             />
                         </div>
 
                         <div className="single-div">
-                            <label htmlFor="">Grade Level</label>
-                            <input 
-                                type="text" 
+                            <label>Grade Level</label>
+                            <input
+                                type="number"
                                 placeholder="Enter grade level (1 - 12)"
                                 value={formData.grade}
+                                min="1"
+                                max="12"
                                 onChange={(e) => handleSelection("grade", e.target.value)}
+                                disabled={quizGenerated}
                             />
                         </div>
 
@@ -105,30 +95,31 @@ function QuizAI() {
                                 { label: "Number of Questions", field: "numQuestions", options: [5, 10, 15] }
                             ].map(({ label, field, options }) => (
                                 <div key={field} className="multiple-div">
-                                    <label htmlFor="">{label}</label>
+                                    <label>{label}</label>
                                     <div className="multiple-options">
-                                        {
-                                            options.map((option) => (
-                                                <button
-                                                    key={option}
-                                                    onClick={() => handleSelection(field, option)}
-                                                    className={`option-button ${formData[field] === option ? "selected" : ""}`}
-                                                >
-                                                    {option}
-                                                </button>
-                                            ))
-                                        }
+                                        {options.map((option) => (
+                                            <button
+                                                key={option}
+                                                onClick={() => handleSelection(field, option)}
+                                                className={`option-button ${formData[field] === option ? "selected" : ""}`}
+                                                disabled={quizGenerated}
+                                            >
+                                                {option}
+                                            </button>
+                                        ))}
                                     </div>
                                 </div>
                             ))
                         }
                     </div>
 
-                    <button className="submit-btn" onClick={handleSubmit}>Submit</button>
+                    <button className="submit-btn" onClick={handleSubmit} disabled={loading || quizGenerated}>
+                        {loading ? "Generating..." : "Submit"}
+                    </button>
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
-export default QuizAI;
+export default CreateQuizAI;

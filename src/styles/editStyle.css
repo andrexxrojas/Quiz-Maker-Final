@@ -1,0 +1,109 @@
+.quiz-container.edit {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.quiz-container .additional-container.edit {
+    width: 100%;
+    padding: 0 20px;
+    max-width: 900px;
+}
+
+.quiz-container .additional-container.edit #title-edit {
+    width: 100%;
+    max-width: 250px;
+    padding: 14px;
+    border-radius: 6px;
+    outline: none;
+    border: none;
+    background-color: #F0F1F5;
+}
+
+.quiz-container .additional-container.edit label {
+    font-family: "Satoshi Medium", Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    margin-right: 10px;
+}
+
+.quiz-container .additional-container.edit h3 {
+    margin-top: 20px;
+    font-family: "Satoshi Bold", Arial, Helvetica, sans-serif;
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+.quiz-container .additional-container.edit .quiz-question-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background-color: unset;
+    padding: unset;
+}
+
+.quiz-container .additional-container.edit .quiz-question-container .edit-question {
+    padding: 20px;
+    border-radius: 6px;
+    background-color: #F0F1F5;
+}
+
+.quiz-container .additional-container.edit .quiz-question-container .edit-question .edit-question-title {
+    padding: 14px;
+    width: calc(100% - 32px);
+    border-radius: 6px;
+    outline: none;
+    border: none;
+    margin-bottom: 20px;
+}
+
+.add-option-btn {
+    border: none;
+    outline: none;
+    background-color: #212529;
+    color: #fff;
+    user-select: none;
+    cursor: pointer;
+    border-radius: 50%;
+    aspect-ratio: 1;
+    height: 26px;
+    width: 26px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.quiz-container .additional-container.edit .edit-options {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.quiz-container .additional-container.edit .cancel-btn {
+    font-family: "Satoshi Medium", Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+    background-color: #212529;
+    color: #fff;
+    user-select: none;
+    cursor: pointer;
+}
+
+.quiz-container .additional-container.edit .submit-btn {
+    font-family: "Satoshi Medium", Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+    background-color: #212529;
+    color: #fff;
+    user-select: none;
+    cursor: pointer;
+    margin: unset;
+}

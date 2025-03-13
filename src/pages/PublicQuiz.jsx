@@ -1,12 +1,17 @@
 import { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
-import { getQuiz, joinQuiz } from "../services/quizService";
+import {
+  getQuiz,
+  joinQuiz,
+  getUser,
+  submitQuiz,
+} from "../services/quizService";
 
 import "../styles/takeQuizStyle.css";
 
-function Quiz() {
-  const { id } = useParams();
+function PublicQuiz() {
+  const { id } = useParams(); // This should be the `joinCode`
   const [quiz, setQuiz] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -27,15 +32,11 @@ function Quiz() {
       return;
     }
 
-    const fetchQuiz = async () => {
-      let data = "";
+    console.log(id);
 
+    const fetchQuiz = async () => {
       try {
-        if (window.location.pathname.includes("/quiz/join/")) {
-          data = await joinQuiz(id);
-        } else {
-          data = await getQuiz(id);
-        }
+        const data = await joinQuiz(id);
 
         const correctList = data.questions.reduce((acc, question) => {
           const correctOption = question.options.find(
@@ -57,8 +58,8 @@ function Quiz() {
 
     fetchQuiz();
     setLoading(false);
-    navigate(`/quiz/${id}`);
-  }, [loading, authLoading, isAuthenticated, navigate, id]);
+    navigate(`/quiz/join/${id}`);
+  }, [loading, isAuthenticated, navigate]);
 
   if (loading) return <p>Loading quiz...</p>;
   if (error) return <p>Error: {error}</p>;
@@ -77,9 +78,7 @@ function Quiz() {
 
       if (currentQuestionIndex === quiz.questions.length - 1) {
         const finalScore = calculateScore(updatedAnswers);
-        setFinalScore(finalScore);
-
-        setQuizComplete(true);
+        handleFinalSubmission(finalScore);
       } else {
         setCurrentQuestionIndex((prev) => prev + 1);
       }
@@ -102,73 +101,54 @@ function Quiz() {
       }
     });
 
+    console.log(`Your final score is: ${score} / ${quiz.questions.length}`);
+
     return score;
   };
 
-  const handleTryAgain = () => {
-    setCurrentQuestionIndex(0);
-    setSelectedOption(null);
-    setAnswers({});
-    setFinalScore(0);
-    setQuizComplete(false);
+  const handleFinalSubmission = async (userScore) => {
+    try {
+      const user = await getUser();
+      if (!user || !user._id) {
+        console.log("User not found");
+      }
+
+      await submitQuiz({ code: id, userId: user._id, score: userScore });
+      navigate("/userHome");
+    } catch (error) {
+      alert("Quiz submission failed", error.essage);
+    }
   };
 
   return (
     <div className="quiz-container">
       <div className="additional-container">
-        {!quizComplete ? (
-          <>
-            <h2>{quiz.title}</h2>
-            <div className="question-container">
-              <h3>
-                Question {currentQuestionIndex + 1} of {quiz.questions.length}
-              </h3>
-              <p>{currentQuestion.text}</p>
-              <ul>
-                {currentQuestion.options.map((option, index) => (
-                  <li
-                    key={index}
-                    className={`quiz-option ${
-                      selectedOption === option.text ? "selected" : ""
-                    }`}
-                    onClick={() => setSelectedOption(option.text)}
-                  >
-                    {option.text}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <button onClick={handleNext} className="submit-btn">
-              {currentQuestionIndex < quiz.questions.length - 1
-                ? "Next"
-                : "Finish"}
-            </button>
-          </>
-        ) : (
-          <>
-            <div className="try-again-container">
-              <h2>
-                You got a score of {finalScore} / {quiz.questions.length}
-              </h2>
-              <div className="button-container">
-                <button
-                  className="try-again btn"
-                  onClick={() => {
-                    navigate("/userHome");
-                  }}
-                >
-                  Go Home
-                </button>
-                <button className="try-again btn" onClick={handleTryAgain}>
-                  Try Again
-                </button>
-              </div>
-            </div>
-          </>
-        )}
+        <h2>{quiz.title}</h2>
+        <div className="question-container">
+          <h3>
+            Question {currentQuestionIndex + 1} of {quiz.questions.length}
+          </h3>
+          <p>{currentQuestion.text}</p>
+          <ul>
+            {currentQuestion.options.map((option, index) => (
+              <li
+                key={index}
+                className={`quiz-option ${
+                  selectedOption === option.text ? "selected" : ""
+                }`}
+                onClick={() => setSelectedOption(option.text)}
+              >
+                {option.text}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <button onClick={handleNext} className="submit-btn">
+          {currentQuestionIndex < quiz.questions.length - 1 ? "Next" : "Finish"}
+        </button>
       </div>
     </div>
   );
 }
 
-export default Quiz;
+export default PublicQuiz;
